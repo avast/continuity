@@ -21,7 +21,7 @@ class ContinuityTest extends FunSuite with AsyncAssertions {
   private def testTraceId(pool: Executor) {
     val waiter = new Waiter
 
-    val wrappedPool = Continuity.wrapExecutor(pool)
+    val wrappedPool = Continuity.wrapExecutor(pool, ContinuityContextThreadNamer.prefix("traceId"))
 
     val traceId1 = "id1"
     Continuity.putToContext("traceId", traceId1)

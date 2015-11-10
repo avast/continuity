@@ -29,22 +29,22 @@ object Continuity {
   }
 
   def wrapExecutionContext(executor: ExecutionContext,
-                           threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContext = new ContinuityExecutionContext(executor)
+                           threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContext = new ContinuityExecutionContext(executor)(threadNamer)
 
   def wrapExecutionContextExecutor(executor: ExecutionContextExecutor,
                                    threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContextExecutor = {
-    new ContinuityExecutionContextExecutor(executor)
+    new ContinuityExecutionContextExecutor(executor)(threadNamer)
   }
 
   def wrapExecutionContextExecutorService(executor: ExecutionContextExecutorService,
                                           threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContextExecutorService = {
-    new ContinuityExecutionContextExecutorService(executor)
+    new ContinuityExecutionContextExecutorService(executor)(threadNamer)
   }
 
   def wrapExecutor(executor: Executor,
-                   threadNamer: ThreadNamer = IdentityThreadNamer): Executor = new ContinuityExecutor(executor)
+                   threadNamer: ThreadNamer = IdentityThreadNamer): Executor = new ContinuityExecutor(executor)(threadNamer)
 
   def wrapExecutorService(executor: ExecutorService,
-                          threadNamer: ThreadNamer = IdentityThreadNamer): Executor = new ContinuityExecutorService(executor)
+                          threadNamer: ThreadNamer = IdentityThreadNamer): Executor = new ContinuityExecutorService(executor)(threadNamer)
 
 }
