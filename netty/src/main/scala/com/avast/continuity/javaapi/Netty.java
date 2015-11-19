@@ -5,8 +5,6 @@ import com.avast.continuity.Netty$;
 import com.avast.continuity.ThreadNamer;
 import io.netty.channel.EventLoopGroup;
 
-import java.util.concurrent.Executor;
-
 public final class Netty {
 
     private static final Netty$ NETTY = Netty$.MODULE$;
@@ -14,11 +12,11 @@ public final class Netty {
     private Netty() {
     }
 
-    public static Executor wrapEventLoopGroup(EventLoopGroup executor) {
+    public static EventLoopGroup wrapEventLoopGroup(EventLoopGroup executor) {
         return NETTY.wrapEventLoopGroup(executor, IdentityThreadNamer$.MODULE$);
     }
 
-    public static Executor wrapEventLoopGroup(EventLoopGroup executor, ThreadNamer threadNamer) {
+    public static EventLoopGroup wrapEventLoopGroup(EventLoopGroup executor, ThreadNamer threadNamer) {
         return NETTY.wrapEventLoopGroup(executor, threadNamer);
     }
 

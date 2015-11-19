@@ -1,6 +1,6 @@
 package com.avast.continuity
 
-import java.util.concurrent.{Callable, Future, TimeUnit}
+import java.util.concurrent.{Callable, TimeUnit}
 
 import io.netty.channel.{Channel, ChannelPromise, EventLoopGroup}
 

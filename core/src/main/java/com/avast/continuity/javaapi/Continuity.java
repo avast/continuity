@@ -36,11 +36,11 @@ public final class Continuity {
         return CONTINUITY.wrapExecutor(executor, threadNamer);
     }
 
-    public static Executor wrapExecutorService(ExecutorService executor) {
+    public static ExecutorService wrapExecutorService(ExecutorService executor) {
         return CONTINUITY.wrapExecutorService(executor, IdentityThreadNamer$.MODULE$);
     }
 
-    public static Executor wrapExecutorService(ExecutorService executor, ThreadNamer threadNamer) {
+    public static ExecutorService wrapExecutorService(ExecutorService executor, ThreadNamer threadNamer) {
         return CONTINUITY.wrapExecutorService(executor, threadNamer);
     }
 
