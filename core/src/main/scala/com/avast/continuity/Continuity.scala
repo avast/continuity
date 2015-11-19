@@ -45,6 +45,6 @@ object Continuity {
                    threadNamer: ThreadNamer = IdentityThreadNamer): Executor = new ContinuityExecutor(executor)(threadNamer)
 
   def wrapExecutorService(executor: ExecutorService,
-                          threadNamer: ThreadNamer = IdentityThreadNamer): Executor = new ContinuityExecutorService(executor)(threadNamer)
+                          threadNamer: ThreadNamer = IdentityThreadNamer): ExecutorService = new ContinuityExecutorService(executor)(threadNamer)
 
 }

@@ -1,0 +1,11 @@
+avast {
+    publish {
+        artifactId = 'continuity-core'
+    }
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    testCompile 'org.scalatest:scalatest_?:2.2.5'
+    testCompile 'ch.qos.logback:logback-classic:1.1.3'
+}

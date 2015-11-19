@@ -12,35 +12,45 @@ buildscript {
 }
 
 apply plugin: 'avast-release'
-apply plugin: 'avast-scala'
-apply plugin: 'avast-publish'
 
-repositories {
-    maven { url 'http://integration.ff.int.avast.com:9999/artifactory/libs-release' }
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'avast-publish'
+    apply plugin: 'idea'
+
+    repositories {
+        maven { url 'http://integration.ff.int.avast.com:9999/artifactory/libs-release' }
+    }
+
+    avast {
+        publish {
+            groupId = 'com.avast.continuity'
+        }
+    }
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    if (project.hasProperty('scala')) {
+        apply plugin: 'avast-scala'
+
+        avast {
+            scala {
+                version = '2.11'
+                versionCatalog = ['2.11': '2.11.7']
+            }
+        }
+
+        // noinspection GroovyAssignabilityCheck
+        tasks.withType(ScalaCompile) {
+            // noinspection GroovyAccessibility
+            scalaCompileOptions.additionalParameters = ['-Xlint', '-Ywarn-value-discard']
+        }
+    }
 }
-
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
 
 avast {
     publish {
-        groupId = 'com.avast'
-        artifactId = 'continuity'
+        artifactId = 'continuity-parent'
     }
-    scala {
-        version = '2.11'
-        versionCatalog = ['2.11': '2.11.7']
-    }
-}
-
-// noinspection GroovyAssignabilityCheck
-tasks.withType(ScalaCompile) {
-    // noinspection GroovyAccessibility
-    scalaCompileOptions.additionalParameters = ['-Xlint', '-Ywarn-value-discard']
-}
-
-dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.12'
-    testCompile 'org.scalatest:scalatest_?:2.2.5'
-    testCompile 'ch.qos.logback:logback-classic:1.1.3'
 }

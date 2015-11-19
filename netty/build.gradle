@@ -1,0 +1,10 @@
+avast {
+    publish {
+        artifactId = 'continuity-netty'
+    }
+}
+
+dependencies {
+    compile project(':core')
+    compile 'io.netty:netty-transport:4.0.33.Final'
+}
