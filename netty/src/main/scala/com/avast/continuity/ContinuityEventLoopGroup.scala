@@ -10,28 +10,28 @@ class ContinuityEventLoopGroup(executor: EventLoopGroup)(implicit threadNamer: T
 
   override def execute(runnable: Runnable) = executor.execute(new MdcRunnable(runnable))
 
-  override def submit(task: Runnable): Future[_] = executor.submit(new MdcRunnable(task))
+  override def submit(task: Runnable) = executor.submit(new MdcRunnable(task))
 
-  override def submit[T](task: Runnable, result: T): Future[T] = executor.submit(new MdcRunnable(task), result)
+  override def submit[T](task: Runnable, result: T) = executor.submit(new MdcRunnable(task), result)
 
-  override def submit[T](task: Callable[T]): Future[T] = executor.submit(new MdcCallable(task))
+  override def submit[T](task: Callable[T]) = executor.submit(new MdcCallable(task))
 
-  override def invokeAny[T](tasks: java.util.Collection[_ <: Callable[T]]): T = {
+  override def invokeAny[T](tasks: java.util.Collection[_ <: Callable[T]]) = {
     val mappedTasks = tasks.asScala.map(new MdcCallable(_)).toList.asJava
     executor.invokeAny(mappedTasks)
   }
 
-  override def invokeAll[T](tasks: java.util.Collection[_ <: Callable[T]]): java.util.List[Future[T]] = {
+  override def invokeAll[T](tasks: java.util.Collection[_ <: Callable[T]]) = {
     val mappedTasks = tasks.asScala.map(new MdcCallable(_)).toList.asJava
     executor.invokeAll(mappedTasks)
   }
 
-  override def invokeAny[T](tasks: java.util.Collection[_ <: Callable[T]], timeout: Long, unit: TimeUnit): T = {
+  override def invokeAny[T](tasks: java.util.Collection[_ <: Callable[T]], timeout: Long, unit: TimeUnit) = {
     val mappedTasks = tasks.asScala.map(new MdcCallable(_)).toList.asJava
     executor.invokeAny(mappedTasks, timeout, unit)
   }
 
-  override def invokeAll[T](tasks: java.util.Collection[_ <: Callable[T]], timeout: Long, unit: TimeUnit): java.util.List[Future[T]] = {
+  override def invokeAll[T](tasks: java.util.Collection[_ <: Callable[T]], timeout: Long, unit: TimeUnit) = {
     val mappedTasks = tasks.asScala.map(new MdcCallable(_)).toList.asJava
     executor.invokeAll(mappedTasks, timeout, unit)
   }
