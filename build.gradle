@@ -41,9 +41,7 @@ allprojects {
             }
         }
 
-        // noinspection GroovyAssignabilityCheck
         tasks.withType(ScalaCompile) {
-            // noinspection GroovyAccessibility
             scalaCompileOptions.additionalParameters = ['-Xlint', '-Ywarn-value-discard']
         }
     }

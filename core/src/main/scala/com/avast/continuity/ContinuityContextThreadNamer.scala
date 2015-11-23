@@ -95,7 +95,7 @@ class ContinuityContextThreadNamer(format: String) extends ThreadNamer with Cont
 
 object ContinuityContextThreadNamer {
 
-  /** Creates a namer with the given format: '''[%key%]-%thread%''' */
-  def prefix(key: String): ContinuityContextThreadNamer = new ContinuityContextThreadNamer(s"[%$key%]-%thread%")
+  /** Creates a namer with the given format: '''%key%-%thread%''' */
+  def prefix(key: String): ContinuityContextThreadNamer = new ContinuityContextThreadNamer(s"%$key%-%thread%")
 
 }
