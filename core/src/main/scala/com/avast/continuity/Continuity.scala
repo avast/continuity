@@ -7,6 +7,8 @@ import org.slf4j.MDC
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, ExecutionContextExecutorService}
 
+/* KEEP THIS IMPLEMENTATION IN SYNC WITH THE JAVA API VERSION */
+
 trait Continuity {
 
   protected[this] def withContext[A](ctxValues: (String, String)*)(block: => A)(implicit threadNamer: ThreadNamer = IdentityThreadNamer): A = {
@@ -21,21 +23,40 @@ trait Continuity {
 
 }
 
+/** Provides methods to work with the Continuity context and factory methods to wrap thread pools. */
 object Continuity {
 
+  /** Marks that the current thread was already processed. */
+  private final val Marker = "__MARKER__"
+
+  /** Creates an instance of [[com.avast.continuity.Continuity]] in case you don't want to use the static methods. */
   def apply(implicit threadNamer: ThreadNamer = IdentityThreadNamer): Continuity = new Continuity {}
 
-  def withContext[A](ctxValues: (String, String)*)(block: => A)(implicit threadNamer: ThreadNamer = IdentityThreadNamer): A = try {
-    ctxValues.foreach { case (key, value) =>
-      putToContext(key, value)
-    }
+  /** Puts the given values into the context, names a thread and runs the given block of code.
+    * It correctly cleans up everything after the block finishes.
+    *
+    * This method is to be used at the leaves of Continuity context usage meaning that you have to fill in the context
+    * somewhere and this method should be used for that. From there the context is propagated automatically.
+    */
+  def withContext[A](ctxValues: (String, String)*)(block: => A)(implicit threadNamer: ThreadNamer = IdentityThreadNamer): A = {
+    if (getFromContext(Marker).isEmpty) {
+      try {
+        putToContext(Marker, "")
+        ctxValues.foreach { case (key, value) =>
+          putToContext(key, value)
+        }
 
-    threadNamer.nameThread {
+        threadNamer.nameThread {
+          block
+        }
+      } finally {
+        ctxValues.foreach { case (key, _) =>
+          removeFromContext(key)
+        }
+        removeFromContext(Marker)
+      }
+    } else {
       block
-    }
-  } finally {
-    ctxValues.foreach { case (key, _) =>
-      removeFromContext(key)
     }
   }
 

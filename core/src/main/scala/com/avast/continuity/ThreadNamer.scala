@@ -1,5 +1,6 @@
 package com.avast.continuity
 
+/** Temporarily renames a thread for the given block of code. */
 trait ThreadNamer {
 
   def nameThread[A](block: => A): A = {

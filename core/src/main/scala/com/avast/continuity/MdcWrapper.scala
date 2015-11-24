@@ -4,9 +4,7 @@ import org.slf4j.MDC
 
 private trait MdcWrapper {
 
-  private type Context = Map[String, String]
-
-  /** Stores the current value of MDC context when this is instantiated. */
+  /** Stores the current value of the context when this is instantiated. */
   protected val continuationContext: Context = context.get
 
   protected def wrap[A](block: => A)(implicit threadNamer: ThreadNamer): A = {

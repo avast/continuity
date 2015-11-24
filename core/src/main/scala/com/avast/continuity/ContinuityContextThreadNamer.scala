@@ -2,9 +2,11 @@ package com.avast.continuity
 
 import java.text.ParseException
 
+import com.avast.continuity.ContinuityContextThreadNamer.{Delimiter, ThreadNamePlaceholder, UnknownKeyPlaceholder}
+
 import scala.annotation.tailrec
 
-/** Names threads according to a given format using values from the context.
+/** Names threads according to a given format using values from the Continuity context.
   *
   * The format can contain special placeholders delimited by '%' which will be filled in by values from the context.
   * Placeholder %thread% is replaced by the current thread name.
@@ -14,10 +16,6 @@ import scala.annotation.tailrec
   * The thread will be named with the value of 'myKey' from the context and the current thread name.
   */
 class ContinuityContextThreadNamer(format: String) extends ThreadNamer with Continuity {
-
-  private final val Delimiter = '%'
-
-  private final val ThreadNamePlaceholder = "thread"
 
   override protected def name = {
     val threadName = Thread.currentThread.getName
@@ -44,7 +42,7 @@ class ContinuityContextThreadNamer(format: String) extends ThreadNamer with Cont
           case Some(char) if char == Delimiter =>
             parseContextKey() match {
               case ThreadNamePlaceholder => builder ++= currentThreadName
-              case key => builder ++= getFromContext(key).getOrElse("unknown")
+              case key => builder ++= getFromContext(key).getOrElse(UnknownKeyPlaceholder)
             }
             loop()
 
@@ -94,6 +92,12 @@ class ContinuityContextThreadNamer(format: String) extends ThreadNamer with Cont
 }
 
 object ContinuityContextThreadNamer {
+
+  private final val Delimiter = '%'
+
+  private final val ThreadNamePlaceholder = "thread"
+
+  private final val UnknownKeyPlaceholder = "unknown"
 
   /** Creates a namer with the given format: '''%key%-%thread%''' */
   def prefix(key: String): ContinuityContextThreadNamer = new ContinuityContextThreadNamer(s"%$key%-%thread%")

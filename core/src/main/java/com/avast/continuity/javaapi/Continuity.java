@@ -14,9 +14,19 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
+/* KEEP THIS IMPLEMENTATION IN SYNC WITH THE SCALA API VERSION */
+
+/**
+ * Provides methods to work with the Continuity context and factory methods to wrap thread pools.
+ */
 public final class Continuity {
 
     private static final Continuity$ CONTINUITY = Continuity$.MODULE$;
+
+    /**
+     * Marks that the current thread was already processed.
+     */
+    private static final String MARKER = "__MARKER__";
 
     private final Map<String, String> ctxValues;
     private final ThreadNamer threadNamer;
@@ -34,21 +44,37 @@ public final class Continuity {
         this(Collections.<String, String>emptyMap());
     }
 
+    /**
+     * <p>Puts the given values into the context, names a thread and runs the given block of code.
+     * It correctly cleans up everything after the block finishes.</p>
+     * <p>This method is to be used at the leaves of Continuity context usage meaning that you have to fill in the context
+     * somewhere and this method should be used for that. From there the context is propagated automatically.</p>
+     */
     public <T> T withContext(final Callable<T> block) throws RuntimeException {
-        try {
-            ctxValues.forEach(Continuity::putToContext);
-            return threadNamer.nameThread(new AbstractFunction0<T>() {
-                @Override
-                public T apply() {
-                    try {
-                        return block.call();
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
+        if (getFromContext(MARKER).isPresent()) {
+            try {
+                return block.call();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        } else {
+            try {
+                putToContext(MARKER, "");
+                ctxValues.forEach(Continuity::putToContext);
+                return threadNamer.nameThread(new AbstractFunction0<T>() {
+                    @Override
+                    public T apply() {
+                        try {
+                            return block.call();
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
-                }
-            });
-        } finally {
-            ctxValues.forEach((k, v) -> removeFromContext(k));
+                });
+            } finally {
+                ctxValues.forEach((k, v) -> removeFromContext(k));
+                removeFromContext(MARKER);
+            }
         }
     }
 
