@@ -7,7 +7,8 @@ import com.avast.utils2.concurrent.CompletableFutureExecutorService
 import scala.collection.JavaConverters._
 
 class ContinuityCompletableFutureExecutorService(executor: CompletableFutureExecutorService)
-                                                (implicit threadNamer: ThreadNamer) extends CompletableFutureExecutorService {
+                                                (implicit threadNamer: ThreadNamer) extends CompletableFutureExecutorService
+                                                                                            with ContinuityExecutorMarker {
 
   override def execute(runnable: Runnable) = executor.execute(new MdcRunnable(runnable))
 

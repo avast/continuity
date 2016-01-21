@@ -77,4 +77,25 @@ class ContinuityTest extends FunSuite with AsyncAssertions {
 
     assert(Await.result(f, Duration("1s")) === 2)
   }
+
+  test("double wrapping") {
+    val waiter = new Waiter
+
+    implicit val namer = ContinuityContextThreadNamer.prefix("traceId")
+    val target = Continuity.wrapExecutionContext(Continuity.wrapExecutionContext(ExecutionContext.global))
+
+    val traceId1 = "id1"
+    Continuity.withContext("traceId" -> traceId1) {
+      target.execute(new Runnable {
+        override def run(): Unit = {
+          assert(Continuity.getFromContext("traceId") === Some(traceId1))
+          assert(Thread.currentThread.getName.startsWith("id1-ForkJoinPool"))
+          waiter.dismiss()
+        }
+      })
+    }
+
+    waiter.await(dismissals(1))
+  }
+
 }

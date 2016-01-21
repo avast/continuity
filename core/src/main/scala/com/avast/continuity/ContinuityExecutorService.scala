@@ -4,7 +4,8 @@ import java.util.concurrent.{Callable, ExecutorService, Future, TimeUnit}
 
 import scala.collection.JavaConverters._
 
-class ContinuityExecutorService(executor: ExecutorService)(implicit threadNamer: ThreadNamer) extends ExecutorService {
+class ContinuityExecutorService(executor: ExecutorService)(implicit threadNamer: ThreadNamer) extends ExecutorService
+                                                                                                      with ContinuityExecutorMarker {
 
   override def execute(runnable: Runnable) = executor.execute(new MdcRunnable(runnable))
 
