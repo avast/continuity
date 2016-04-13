@@ -1,0 +1,19 @@
+apply plugin: 'com.github.maiflai.scalatest'
+
+avast {
+    publish {
+        artifactId = 'continuity-core-scala'
+    }
+}
+
+test {
+    // maxParallelForks = 1
+    reports.html.enabled = false
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.13'
+    compile 'com.avast.utils2:utils-common:3.5.0'
+    testCompile 'org.scalatest:scalatest_?:2.2.5'
+    testCompile 'ch.qos.logback:logback-classic:1.1.3'
+}

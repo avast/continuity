@@ -5,8 +5,8 @@ import scala.concurrent.ExecutionContext
 class ContinuityExecutionContext(ec: ExecutionContext)(implicit threadNamer: ThreadNamer) extends ExecutionContext
                                                                                                   with ContinuityExecutorMarker {
 
-  override def execute(runnable: Runnable) = ec.execute(new MdcRunnable(runnable))
+  override def execute(runnable: Runnable): Unit = ec.execute(new MdcRunnable(runnable))
 
-  override def reportFailure(cause: Throwable) = ec.reportFailure(cause)
+  override def reportFailure(cause: Throwable): Unit = ec.reportFailure(cause)
 
 }

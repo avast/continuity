@@ -1,17 +1,19 @@
 package com.avast.continuity
 
+import java.util
 import java.util.concurrent.{Callable, Future, TimeUnit}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContextExecutorService
 
 class ContinuityExecutionContextExecutorService(ec: ExecutionContextExecutorService)
-                                               (implicit threadNamer: ThreadNamer) extends ExecutionContextExecutorService
-                                                                                           with ContinuityExecutorMarker {
+                                               (implicit threadNamer: ThreadNamer)
+  extends ExecutionContextExecutorService
+    with ContinuityExecutorMarker {
 
-  override def execute(runnable: Runnable) = ec.execute(new MdcRunnable(runnable))
+  override def execute(runnable: Runnable): Unit = ec.execute(new MdcRunnable(runnable))
 
-  override def reportFailure(cause: Throwable) = ec.reportFailure(cause)
+  override def reportFailure(cause: Throwable): Unit = ec.reportFailure(cause)
 
   override def submit(task: Runnable): Future[_] = ec.submit(new MdcRunnable(task))
 
@@ -39,14 +41,14 @@ class ContinuityExecutionContextExecutorService(ec: ExecutionContextExecutorServ
     ec.invokeAll(mappedTasks, timeout, unit)
   }
 
-  override def shutdown() = ec.shutdown()
+  override def shutdown(): Unit = ec.shutdown()
 
-  override def shutdownNow() = ec.shutdownNow()
+  override def shutdownNow(): util.List[Runnable] = ec.shutdownNow()
 
-  override def isShutdown = ec.isShutdown
+  override def isShutdown: Boolean = ec.isShutdown
 
-  override def awaitTermination(timeout: Long, unit: TimeUnit) = ec.awaitTermination(timeout, unit)
+  override def awaitTermination(timeout: Long, unit: TimeUnit): Boolean = ec.awaitTermination(timeout, unit)
 
-  override def isTerminated = ec.isTerminated
+  override def isTerminated: Boolean = ec.isTerminated
 
 }
