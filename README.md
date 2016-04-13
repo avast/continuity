@@ -6,7 +6,7 @@ into [MDC](logback.qos.ch/manual/mdc.html) so that you can see those values in y
 
 The library consists of two modules. The `core` is the library itself, `netty` is an extension for the [Netty](http://netty.io) library.
 
-It has both [Scala](core/src/main/scala/com/avast/continuity) and [Java](core/src/main/java/com/avast/continuity/javaapi) APIs.
+It has both [Scala](core-scala/src/main/scala/com/avast/continuity) and [Java](core/src/main/java/com/avast/continuity/javaapi) APIs.
 
 Most of you won't need to work with this library as it should be integrated into other libraries ([Yap](https://git.int.avast.com/ff/yap), 
 [HTTP Clients](https://git.int.avast.com/ff/clients)) for seamless cooperation. The only thing that is required and you might need to do
@@ -52,9 +52,9 @@ This is a recommended format for the [Kluzo](https://git.int.avast.com/ff/kluzo)
 
 ## Thread Naming
 One thing is to see the context values in your logs but there are other tools where this information might be beneficial but wouldn't be visible (VisualVM, ...).
-Continuity allows you to set a [ThreadNamer](core/src/main/scala/com/avast/continuity/ThreadNamer.scala) which can change the name of the thread
-according to your needs. It is [IdentityThreadNamer](core/src/main/scala/com/avast/continuity/IdentityThreadNamer.scala) by default but there is
-[ContinuityContextThreadNamer](core/src/main/scala/com/avast/continuity/ContinuityContextThreadNamer.scala) which can be used to alter the thread name according 
+Continuity allows you to set a [ThreadNamer](core-scala/src/main/scala/com/avast/continuity/ThreadNamer.scala) which can change the name of the thread
+according to your needs. It is [IdentityThreadNamer](core-scala/src/main/scala/com/avast/continuity/IdentityThreadNamer.scala) by default but there is
+[ContinuityContextThreadNamer](core-scala/src/main/scala/com/avast/continuity/ContinuityContextThreadNamer.scala) which can be used to alter the thread name according 
 to the provided format with keys from the context.
 
 ## Example
