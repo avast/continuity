@@ -19,7 +19,7 @@ class ContinuityTest extends FunSuite with AsyncAssertions {
     testTraceId(ExecutionContext.global)
   }
 
-  private def testTraceId(pool: Executor) {
+  private def testTraceId(pool: Executor): Unit = {
     val waiter = new Waiter
 
     implicit val threadNamer = ContinuityContextThreadNamer.prefix("traceId")
