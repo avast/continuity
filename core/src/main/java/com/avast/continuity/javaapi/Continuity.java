@@ -36,6 +36,16 @@ public final class Continuity {
      * <p>This method is to be used at the leaves of Continuity context usage meaning that you have to fill in the context
      * somewhere and this method should be used for that. From there the context is propagated automatically.</p>
      */
+    public static <T> T withContext(Map<String, String> ctxValues, Callable<T> block) throws RuntimeException {
+        return withContext(ctxValues, IdentityThreadNamer$.MODULE$, block);
+    }
+
+    /**
+     * <p>Puts the given values into the context, names a thread and runs the given block of code.
+     * It correctly cleans up everything after the block finishes.</p>
+     * <p>This method is to be used at the leaves of Continuity context usage meaning that you have to fill in the context
+     * somewhere and this method should be used for that. From there the context is propagated automatically.</p>
+     */
     public static <T> T withContext(Map<String, String> ctxValues, ThreadNamer threadNamer, Callable<T> block) throws RuntimeException {
         if (getFromContext(MARKER).isPresent()) {
             try {
