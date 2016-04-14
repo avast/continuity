@@ -7,7 +7,6 @@ import com.avast.utils2.concurrent.CompletableFutureExecutorService;
 import scala.Option;
 import scala.runtime.AbstractFunction0;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -28,20 +27,7 @@ public final class Continuity {
      */
     private static final String MARKER = "__MARKER__";
 
-    private final Map<String, String> ctxValues;
-    private final ThreadNamer threadNamer;
-
-    public Continuity(Map<String, String> ctxValues, ThreadNamer threadNamer) {
-        this.ctxValues = ctxValues;
-        this.threadNamer = threadNamer;
-    }
-
-    public Continuity(Map<String, String> ctxValues) {
-        this(ctxValues, IdentityThreadNamer$.MODULE$);
-    }
-
-    public Continuity() {
-        this(Collections.<String, String>emptyMap());
+    private Continuity() {
     }
 
     /**
@@ -50,7 +36,7 @@ public final class Continuity {
      * <p>This method is to be used at the leaves of Continuity context usage meaning that you have to fill in the context
      * somewhere and this method should be used for that. From there the context is propagated automatically.</p>
      */
-    public <T> T withContext(final Callable<T> block) throws RuntimeException {
+    public static <T> T withContext(Map<String, String> ctxValues, ThreadNamer threadNamer, Callable<T> block) throws RuntimeException {
         if (getFromContext(MARKER).isPresent()) {
             try {
                 return block.call();

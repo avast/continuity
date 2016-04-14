@@ -30,8 +30,7 @@ public class ContinuityTest {
         CountDownLatch latch = new CountDownLatch(3);
 
         String traceId1 = "id1";
-        Continuity continuity1 = new Continuity(map("traceId", traceId1), threadNamer);
-        continuity1.withContext(() -> {
+        Continuity.withContext(map("traceId", traceId1), threadNamer, () -> {
             wrappedExecutor.execute(() -> {
                 assertEquals(Continuity.getFromContext("traceId"), Optional.of(traceId1));
                 logger.info("first");
@@ -41,8 +40,7 @@ public class ContinuityTest {
         });
 
         String traceId2 = "id2";
-        Continuity continuity2 = new Continuity(map("traceId", traceId2), threadNamer);
-        continuity2.withContext(() -> {
+        Continuity.withContext(map("traceId", traceId2), threadNamer, () -> {
             executor.execute(() -> {
                 assertEquals(Continuity.getFromContext("traceId"), Optional.empty());
                 logger.info("second");
@@ -52,8 +50,7 @@ public class ContinuityTest {
         });
 
         String traceId3 = "id3";
-        Continuity continuity3 = new Continuity(map("traceId", traceId3), threadNamer);
-        continuity3.withContext(() -> {
+        Continuity.withContext(map("traceId", traceId3), threadNamer, () -> {
             wrappedExecutor.execute(() -> {
                 assertEquals(Continuity.getFromContext("traceId"), Optional.of(traceId3));
                 logger.info("third");
@@ -72,10 +69,8 @@ public class ContinuityTest {
         ContinuityContextThreadNamer threadNamer = ContinuityContextThreadNamer.prefix("traceId");
         ExecutorService wrapExecutorService = Continuity.wrapExecutorService(executor, threadNamer);
 
-        Continuity c = new Continuity(map("traceId", "value"), threadNamer);
-
-        CompletableFuture<Integer> f = c.withContext(() -> {
-            CompletableFuture<Integer> x = new CompletableFuture<Integer>();
+        CompletableFuture<Integer> f = Continuity.withContext(map("traceId", "value"), threadNamer, () -> {
+            CompletableFuture<Integer> x = new CompletableFuture<>();
             x.whenCompleteAsync((a, b) -> {
                 assertEquals("value", Continuity.getFromContext("traceId"));
                 logger.info("inside completablefuture " + Continuity.getFromContext("traceId"));
