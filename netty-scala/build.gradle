@@ -6,5 +6,5 @@ avast {
 
 dependencies {
     compile project(':core')
-    compile 'io.netty:netty-transport:4.0.36.Final'
+    compile 'io.netty:netty-transport:4.1.1.Final'
 }

@@ -62,7 +62,8 @@ it tries to lay a common ground using the official style guide: http://docs.scal
     </check>
     <check class="org.scalastyle.scalariform.EnsureSingleSpaceBeforeTokenChecker" level="warning" enabled="false"/>
     <check class="org.scalastyle.scalariform.EqualsHashCodeChecker" level="error" enabled="true"/>
-    <check class="org.scalastyle.scalariform.FieldNamesChecker" level="error" enabled="true">
+    <check class="org.scalastyle.scalariform.FieldNamesChecker" level="error" enabled="false">
+        <!-- disabled because does not work well with pattern matching -->
         <parameters>
             <parameter name="regex"><![CDATA[^[a-zA-Z][a-zA-Z0-9]*$]]></parameter>
         </parameters>

@@ -78,4 +78,6 @@ class ContinuityEventLoopGroup(executor: EventLoopGroup)(implicit threadNamer: T
     executor.shutdownGracefully(quietPeriod, timeout, unit)
   }
 
+  override def register(promise: ChannelPromise): ChannelFuture = executor.register(promise)
+
 }
