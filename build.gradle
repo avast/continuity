@@ -8,16 +8,16 @@ buildscript {
         classpath 'com.avast.gradle:gradle-release:0.8.21'
         classpath 'com.avast.gradle:gradle-scala:0.8.21'
         classpath 'com.avast.gradle:gradle-protobuf:0.8.21'
-        classpath 'com.github.maiflai:gradle-scalatest:0.12'
+        classpath 'com.github.maiflai:gradle-scalatest:0.13'
     }
 }
 
+apply plugin: 'idea'
 apply plugin: 'avast-release'
 
-allprojects {
+subprojects {
     apply plugin: 'java'
     apply plugin: 'avast-publish'
-    apply plugin: 'idea'
 
     repositories {
         maven { url 'https://artifactory.int.avast.com/artifactory/maven' }
@@ -40,11 +40,5 @@ allprojects {
                 version = '2.11'
             }
         }
-    }
-}
-
-avast {
-    publish {
-        artifactId = 'continuity-parent'
     }
 }

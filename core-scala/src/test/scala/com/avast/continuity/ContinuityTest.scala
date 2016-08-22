@@ -3,13 +3,13 @@ package com.avast.continuity
 import java.util.concurrent.{Executor, Executors}
 
 import org.scalatest.FunSuite
-import org.scalatest.concurrent.AsyncAssertions
+import org.scalatest.concurrent.Waiters
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
-class ContinuityTest extends FunSuite with AsyncAssertions {
+class ContinuityTest extends FunSuite with Waiters {
 
   /** See the log output to check that traceId is present. */
   private val logger = LoggerFactory.getLogger(this.getClass)

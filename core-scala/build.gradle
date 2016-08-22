@@ -13,7 +13,7 @@ test {
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'com.avast.utils2:utils-common:3.5.9'
-    testCompile 'org.scalatest:scalatest_?:2.2.5'
+    compile 'com.avast.utils2:utils-common:4.0.14'
+    testCompile 'org.scalatest:scalatest_?:3.0.0'
     testCompile 'ch.qos.logback:logback-classic:1.1.7'
 }
