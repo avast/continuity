@@ -4,11 +4,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.avast.gradle:gradle-publish:0.8.21'
-        classpath 'com.avast.gradle:gradle-release:0.8.21'
-        classpath 'com.avast.gradle:gradle-scala:0.8.21'
-        classpath 'com.avast.gradle:gradle-protobuf:0.8.21'
-        classpath 'com.github.maiflai:gradle-scalatest:0.13'
+        classpath 'com.avast.gradle:gradle-publish:0.9.0'
+        classpath 'com.avast.gradle:gradle-release:0.9.0'
+        classpath 'com.avast.gradle:gradle-scala:0.9.0'
+        classpath 'com.avast.gradle:gradle-protobuf:0.9.0'
+        classpath 'com.github.maiflai:gradle-scalatest:0.14'
     }
 }
 
