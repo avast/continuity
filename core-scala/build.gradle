@@ -6,8 +6,7 @@ avast {
     }
 }
 
-test {
-    // maxParallelForks = 1
+tasks.withType(Test) {
     reports.html.enabled = false
 }
 
