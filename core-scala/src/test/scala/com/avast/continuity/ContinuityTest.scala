@@ -2,8 +2,11 @@ package com.avast.continuity
 
 import java.util.concurrent.{Executor, Executors}
 
+import com.avast.utils2.concurrent.ConfigurableThreadFactory
+import com.avast.utils2.concurrent.ConfigurableThreadFactory.IndexingNamingStrategy
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.Waiters
+import org.scalatest.time.{Seconds, Span}
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration.Duration
@@ -82,20 +85,23 @@ class ContinuityTest extends FunSuite with Waiters {
     val waiter = new Waiter
 
     implicit val namer = ContinuityContextThreadNamer.prefix("traceId")
-    val target = Continuity.wrapExecutionContext(Continuity.wrapExecutionContext(ExecutionContext.global))
+    val pool = ExecutionContext.fromExecutor(
+      Executors.newFixedThreadPool(1, ConfigurableThreadFactory.builder.withNamingStrategy(new IndexingNamingStrategy("thread-%d")).build))
+    val target = Continuity.wrapExecutionContext(Continuity.wrapExecutionContext(pool))
 
     val traceId1 = "id1"
     Continuity.withContext("traceId" -> traceId1) {
       target.execute(new Runnable {
         override def run(): Unit = {
+          println("running")
           assert(Continuity.getFromContext("traceId") === Some(traceId1))
-          assert(Thread.currentThread.getName.startsWith("id1-ForkJoinPool"))
+          assert(Thread.currentThread.getName.startsWith("id1-thread-0"))
           waiter.dismiss()
         }
       })
     }
 
-    waiter.await(dismissals(1))
+    waiter.await(timeout(Span(5, Seconds)), dismissals(1))
   }
 
 }

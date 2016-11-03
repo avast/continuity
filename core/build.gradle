@@ -1,8 +1,11 @@
+evaluationDependsOn(":core-scala") // necessary for cross-compilation
+
 avast {
     publish {
         artifactId = 'continuity-core'
     }
 }
+
 
 dependencies {
     compile project(':core-scala')

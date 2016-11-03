@@ -1,3 +1,5 @@
+evaluationDependsOn(":netty-scala") // necessary for cross-compilation
+
 avast {
     publish {
         artifactId = 'continuity-netty'
