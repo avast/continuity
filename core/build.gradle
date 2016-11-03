@@ -6,7 +6,6 @@ avast {
     }
 }
 
-
 dependencies {
     compile project(':core-scala')
     testCompile 'junit:junit:4.12'
