@@ -1,10 +1,10 @@
 avast {
     publish {
-        artifactId = 'continuity-netty-scala'
+        artifactId = "continuity-netty-scala"
     }
 }
 
 dependencies {
-    compile project(':core')
-    compile 'io.netty:netty-transport:4.1.6.Final'
+    compile project(":core")
+    compile "io.netty:netty-transport:4.1.6.Final"
 }

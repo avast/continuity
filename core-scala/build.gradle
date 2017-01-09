@@ -1,8 +1,8 @@
-apply plugin: 'com.github.maiflai.scalatest'
+apply plugin: "com.github.maiflai.scalatest"
 
 avast {
     publish {
-        artifactId = 'continuity-core-scala'
+        artifactId = "continuity-core-scala"
     }
 }
 
@@ -11,8 +11,8 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'com.avast.utils2:utils-common:4.3.26'
-    testCompile 'org.scalatest:scalatest_?:3.0.0'
-    testCompile 'ch.qos.logback:logback-classic:1.1.7'
+    compile "org.slf4j:slf4j-api:1.7.22"
+    compile "com.avast.utils2:utils-common:5.0.39"
+    testCompile "org.scalatest:scalatest_?:3.0.1"
+    testCompile "ch.qos.logback:logback-classic:1.1.8"
 }

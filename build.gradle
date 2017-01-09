@@ -1,50 +1,44 @@
 buildscript {
     repositories {
-        maven { url 'https://artifactory.int.avast.com/artifactory/maven' }
+        maven { url "https://artifactory.int.avast.com/artifactory/maven" }
     }
 
     dependencies {
-        classpath 'com.avast.gradle:gradle-publish:0.9.3'
-        classpath 'com.avast.gradle:gradle-release:0.9.3'
-        classpath 'com.avast.gradle:gradle-scala:0.9.3'
-        classpath 'com.avast.gradle:gradle-protobuf:0.9.3'
-        classpath 'com.github.maiflai:gradle-scalatest:0.14'
+        classpath "com.avast.gradle:gradle-publish:0.10.4"
+        classpath "com.avast.gradle:gradle-release:0.10.4"
+        classpath "com.avast.gradle:gradle-scala:0.10.4"
+        classpath "com.avast.gradle:gradle-protobuf:0.10.4"
+        classpath "com.github.maiflai:gradle-scalatest:0.14"
     }
 }
 
-apply plugin: 'idea'
-apply plugin: 'avast-release'
+apply plugin: "idea"
+apply plugin: "avast-release"
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'avast-publish'
+    apply plugin: "java"
+    apply plugin: "avast-publish"
 
     repositories {
-        maven { url 'https://artifactory.int.avast.com/artifactory/maven' }
+        maven { url "https://artifactory.int.avast.com/artifactory/maven" }
     }
 
     avast {
         publish {
-            groupId = 'com.avast.continuity'
+            groupId = "com.avast.continuity"
         }
     }
 
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
 
-    if (project.hasProperty('scala')) {
-        apply plugin: 'avast-scala'
+    if (project.hasProperty("scala")) {
+        apply plugin: "avast-scala"
 
         avast {
             scala {
-                version = '2.11'
+                version = "2.11"
                 crossVersions = ["2.11", "2.12"]
-                versionCatalog = ["2.11": "2.11.8", "2.12": "2.12.0"]
-
-                codeStyle {
-                    enableLinter = false
-                    enableScalaStyle = false
-                }
             }
         }
     }
