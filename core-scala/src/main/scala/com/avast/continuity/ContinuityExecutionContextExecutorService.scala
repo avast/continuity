@@ -6,9 +6,8 @@ import java.util.concurrent.{Callable, Future, TimeUnit}
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContextExecutorService
 
-class ContinuityExecutionContextExecutorService(ec: ExecutionContextExecutorService)
-                                               (implicit threadNamer: ThreadNamer)
-  extends ExecutionContextExecutorService
+class ContinuityExecutionContextExecutorService(ec: ExecutionContextExecutorService)(implicit threadNamer: ThreadNamer)
+    extends ExecutionContextExecutorService
     with ContinuityExecutorMarker {
 
   override def execute(runnable: Runnable): Unit = ec.execute(new MdcRunnable(runnable))

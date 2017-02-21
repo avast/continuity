@@ -11,7 +11,8 @@ import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, ExecutionCo
 
 trait Continuity {
 
-  protected[this] def withContext[A](ctxValues: (String, String)*)(block: => A)(implicit threadNamer: ThreadNamer = IdentityThreadNamer): A = {
+  protected[this] def withContext[A](ctxValues: (String, String)*)(block: => A)(
+      implicit threadNamer: ThreadNamer = IdentityThreadNamer): A = {
     Continuity.withContext(ctxValues: _*)(block)
   }
 
@@ -42,16 +43,18 @@ object Continuity {
     if (getFromContext(Marker).isEmpty) {
       try {
         putToContext(Marker, "")
-        ctxValues.foreach { case (key, value) =>
-          putToContext(key, value)
+        ctxValues.foreach {
+          case (key, value) =>
+            putToContext(key, value)
         }
 
         threadNamer.nameThread {
           block
         }
       } finally {
-        ctxValues.foreach { case (key, _) =>
-          removeFromContext(key)
+        ctxValues.foreach {
+          case (key, _) =>
+            removeFromContext(key)
         }
         removeFromContext(Marker)
       }
@@ -74,35 +77,34 @@ object Continuity {
     MDC.remove(key)
   }
 
-  def wrapExecutionContext(executor: ExecutionContext)
-                          (implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContext = preventDoubleWrap(executor) {
-    new ContinuityExecutionContext(executor)(threadNamer)
-  }
+  def wrapExecutionContext(executor: ExecutionContext)(implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContext =
+    preventDoubleWrap(executor) {
+      new ContinuityExecutionContext(executor)(threadNamer)
+    }
 
-  def wrapExecutionContextExecutor(executor: ExecutionContextExecutor)
-                                  (implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContextExecutor = preventDoubleWrap(executor) {
+  def wrapExecutionContextExecutor(executor: ExecutionContextExecutor)(
+      implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContextExecutor = preventDoubleWrap(executor) {
     new ContinuityExecutionContextExecutor(executor)(threadNamer)
   }
 
-  def wrapExecutionContextExecutorService(executor: ExecutionContextExecutorService)
-                                         (implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContextExecutorService = {
+  def wrapExecutionContextExecutorService(executor: ExecutionContextExecutorService)(
+      implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutionContextExecutorService = {
     preventDoubleWrap(executor) {
       new ContinuityExecutionContextExecutorService(executor)(threadNamer)
     }
   }
 
-  def wrapExecutor(executor: Executor)
-                  (implicit threadNamer: ThreadNamer = IdentityThreadNamer): Executor = preventDoubleWrap(executor) {
+  def wrapExecutor(executor: Executor)(implicit threadNamer: ThreadNamer = IdentityThreadNamer): Executor = preventDoubleWrap(executor) {
     new ContinuityExecutor(executor)(threadNamer)
   }
 
-  def wrapExecutorService(executor: ExecutorService)
-                         (implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutorService = preventDoubleWrap(executor) {
-    new ContinuityExecutorService(executor)(threadNamer)
-  }
+  def wrapExecutorService(executor: ExecutorService)(implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutorService =
+    preventDoubleWrap(executor) {
+      new ContinuityExecutorService(executor)(threadNamer)
+    }
 
-  def wrapCompletableFutureExecutorService(executor: CompletableFutureExecutorService)
-                                          (implicit threadNamer: ThreadNamer = IdentityThreadNamer): CompletableFutureExecutorService = {
+  def wrapCompletableFutureExecutorService(executor: CompletableFutureExecutorService)(
+      implicit threadNamer: ThreadNamer = IdentityThreadNamer): CompletableFutureExecutorService = {
     preventDoubleWrap(executor) {
       new ContinuityCompletableFutureExecutorService(executor)(threadNamer)
     }

@@ -33,14 +33,18 @@ class ContinuityEventLoopGroup(executor: EventLoopGroup)(implicit threadNamer: T
     executor.invokeAny(mappedTasks, timeout, unit)
   }
 
-  override def invokeAll[T](tasks: java.util.Collection[_ <: Callable[T]], timeout: Long, unit: TimeUnit): util.List[util.concurrent.Future[T]] = {
+  override def invokeAll[T](tasks: java.util.Collection[_ <: Callable[T]],
+                            timeout: Long,
+                            unit: TimeUnit): util.List[util.concurrent.Future[T]] = {
     val mappedTasks = tasks.asScala.map(new MdcCallable(_)).toList.asJava
     executor.invokeAll(mappedTasks, timeout, unit)
   }
 
-  override def schedule(command: Runnable, delay: Long, unit: TimeUnit): ScheduledFuture[_] = executor.schedule(new MdcRunnable(command), delay, unit)
+  override def schedule(command: Runnable, delay: Long, unit: TimeUnit): ScheduledFuture[_] =
+    executor.schedule(new MdcRunnable(command), delay, unit)
 
-  override def schedule[V](callable: Callable[V], delay: Long, unit: TimeUnit): ScheduledFuture[V] = executor.schedule(new MdcCallable(callable), delay, unit)
+  override def schedule[V](callable: Callable[V], delay: Long, unit: TimeUnit): ScheduledFuture[V] =
+    executor.schedule(new MdcCallable(callable), delay, unit)
 
   override def scheduleAtFixedRate(command: Runnable, initialDelay: Long, period: Long, unit: TimeUnit): ScheduledFuture[_] = {
     executor.scheduleAtFixedRate(new MdcRunnable(command), initialDelay, period, unit)

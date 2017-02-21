@@ -69,11 +69,11 @@ class ContinuityTest extends FunSuite with Waiters {
     val f = Continuity.withContext("traceId" -> "value") {
       Future {
         assert(Continuity.getFromContext("traceId") === Some("value"))
-        logger.info(s"creating future ${ Continuity.getFromContext("traceId") }")
+        logger.info(s"creating future ${Continuity.getFromContext("traceId")}")
         1
       }.map { i =>
         assert(Continuity.getFromContext("traceId") === Some("value"))
-        logger.info(s"mapping future ${ Continuity.getFromContext("traceId") }")
+        logger.info(s"mapping future ${Continuity.getFromContext("traceId")}")
         i + 1
       }
     }

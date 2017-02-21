@@ -59,13 +59,14 @@ class ContinuityContextThreadNamer(format: String) extends ThreadNamer with Cont
       builder.toString
     }
 
-    private def nextChar: Option[Char] = if (index < format.length) {
-      val char = format(index)
-      index += 1
-      Some(char)
-    } else {
-      None
-    }
+    private def nextChar: Option[Char] =
+      if (index < format.length) {
+        val char = format(index)
+        index += 1
+        Some(char)
+      } else {
+        None
+      }
 
     private def parseContextKey(): String = {
       val key = new StringBuilder

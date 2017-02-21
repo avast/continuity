@@ -11,8 +11,9 @@ private trait MdcWrapper {
     val originalContext = context.get
     try {
       context.set(continuationContext)
-      continuationContext.foreach { case (key, value) =>
-        MDC.put(key, value)
+      continuationContext.foreach {
+        case (key, value) =>
+          MDC.put(key, value)
       }
 
       threadNamer.nameThread {
@@ -20,8 +21,9 @@ private trait MdcWrapper {
       }
     } finally {
       context.set(originalContext)
-      continuationContext.foreach { case (key, _) =>
-        MDC.remove(key)
+      continuationContext.foreach {
+        case (key, _) =>
+          MDC.remove(key)
       }
     }
   }
