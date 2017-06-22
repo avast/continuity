@@ -3,7 +3,6 @@ package com.avast.continuity.javaapi;
 import com.avast.continuity.Continuity$;
 import com.avast.continuity.IdentityThreadNamer$;
 import com.avast.continuity.ThreadNamer;
-import com.avast.utils2.concurrent.CompletableFutureExecutorService;
 import scala.Option;
 import scala.runtime.AbstractFunction0;
 
@@ -100,14 +99,6 @@ public final class Continuity {
 
     public static ExecutorService wrapExecutorService(ExecutorService executor, ThreadNamer threadNamer) {
         return CONTINUITY.wrapExecutorService(executor, threadNamer);
-    }
-
-    public static CompletableFutureExecutorService wrapCompletableFutureExecutorService(CompletableFutureExecutorService executor) {
-        return CONTINUITY.wrapCompletableFutureExecutorService(executor, IdentityThreadNamer$.MODULE$);
-    }
-
-    public static CompletableFutureExecutorService wrapCompletableFutureExecutorService(CompletableFutureExecutorService executor, ThreadNamer threadNamer) {
-        return CONTINUITY.wrapCompletableFutureExecutorService(executor, threadNamer);
     }
 
     private static <T> Optional<T> optionToOptional(Option<T> option) {

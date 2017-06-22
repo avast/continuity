@@ -2,8 +2,6 @@ package com.avast.continuity
 
 import java.util.concurrent.{Executor, Executors}
 
-import com.avast.utils2.concurrent.ConfigurableThreadFactory
-import com.avast.utils2.concurrent.ConfigurableThreadFactory.IndexingNamingStrategy
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.Waiters
 import org.scalatest.time.{Seconds, Span}
@@ -85,8 +83,7 @@ class ContinuityTest extends FunSuite with Waiters {
     val waiter = new Waiter
 
     implicit val namer = ContinuityContextThreadNamer.prefix("traceId")
-    val pool = ExecutionContext.fromExecutor(
-      Executors.newFixedThreadPool(1, ConfigurableThreadFactory.builder.withNamingStrategy(new IndexingNamingStrategy("thread-%d")).build))
+    val pool = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(1))
     val target = Continuity.wrapExecutionContext(Continuity.wrapExecutionContext(pool))
 
     val traceId1 = "id1"
@@ -95,7 +92,7 @@ class ContinuityTest extends FunSuite with Waiters {
         override def run(): Unit = {
           println("running")
           assert(Continuity.getFromContext("traceId") === Some(traceId1))
-          assert(Thread.currentThread.getName.startsWith("id1-thread-0"))
+          assert(Thread.currentThread.getName.matches("id1\\-pool\\-\\d\\-thread\\-\\d"))
           waiter.dismiss()
         }
       })
