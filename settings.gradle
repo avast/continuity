@@ -1,6 +1,0 @@
-rootProject.name = "continuity"
-
-include "core"
-include "core-scala"
-include "netty"
-include "netty-scala"

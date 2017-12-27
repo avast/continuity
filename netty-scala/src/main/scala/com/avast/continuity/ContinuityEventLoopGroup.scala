@@ -1,9 +1,10 @@
 package com.avast.continuity
 
 import java.util
+import java.util.Collections
 import java.util.concurrent.{Callable, TimeUnit}
 
-import io.netty.channel.{Channel, ChannelFuture, ChannelPromise, EventLoop, EventLoopGroup}
+import io.netty.channel._
 import io.netty.util.concurrent.{EventExecutor, Future, ScheduledFuture}
 
 import scala.collection.JavaConverters._
@@ -54,9 +55,16 @@ class ContinuityEventLoopGroup(executor: EventLoopGroup)(implicit threadNamer: T
     executor.scheduleWithFixedDelay(new MdcRunnable(command), initialDelay, delay, unit)
   }
 
-  override def shutdown(): Unit = executor.shutdown()
+  override def shutdown(): Unit = executor.shutdownGracefully()
 
-  override def shutdownNow(): util.List[Runnable] = executor.shutdownNow()
+  /**
+    * @return Always an empty immutable list.
+    */
+  @deprecated("See io.netty.util.concurrent.EventExecutorGroup", "3.0")
+  override def shutdownNow(): util.List[Runnable] = {
+    executor.shutdownGracefully()
+    Collections.emptyList()
+  }
 
   override def isShutdown: Boolean = executor.isShutdown
 
@@ -68,6 +76,7 @@ class ContinuityEventLoopGroup(executor: EventLoopGroup)(implicit threadNamer: T
 
   override def register(channel: Channel): ChannelFuture = executor.register(channel)
 
+  // noinspection ScalaDeprecation
   override def register(channel: Channel, promise: ChannelPromise): ChannelFuture = executor.register(channel, promise)
 
   override def isShuttingDown: Boolean = executor.isShuttingDown

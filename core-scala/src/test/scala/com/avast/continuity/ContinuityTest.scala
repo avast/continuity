@@ -92,7 +92,7 @@ class ContinuityTest extends FunSuite with Waiters {
         override def run(): Unit = {
           println("running")
           assert(Continuity.getFromContext("traceId") === Some(traceId1))
-          assert(Thread.currentThread.getName.matches("id1\\-pool\\-\\d\\-thread\\-\\d"))
+          assert(Thread.currentThread.getName.matches("id1\\-pool\\-\\d+\\-thread\\-\\d"))
           waiter.dismiss()
         }
       })
