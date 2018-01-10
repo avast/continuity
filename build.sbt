@@ -1,35 +1,30 @@
 import sbt.Keys.libraryDependencies
 
+lazy val Versions = new {
+  val netty = "4.1.19.Final"
+  val slf4j = "1.7.25"
+}
+
 lazy val scalaSettings = Seq(
-  scalaVersion := "2.11.8",
+  scalaVersion := "2.12.4",
   scalacOptions += "-deprecation",
   scalacOptions += "-unchecked",
-  scalacOptions += "-feature",
-  crossScalaVersions := Seq("2.11.8", "2.12.4"),
-  libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "3.0.1" % "test"
-  )
+  scalacOptions += "-feature"
 )
 
 lazy val javaSettings = Seq(
   crossPaths := false,
-  autoScalaLibrary := false,
-  crossScalaVersions := Seq("2.11.8") // it's not really used; it's just about turning-off the crosscompilation
+  autoScalaLibrary := false
 )
-
-lazy val Versions = new {
-  val slf4j = "1.7.25"
-}
 
 lazy val commonSettings = Seq(
   organization := "com.avast.continuity",
   version := sys.env.getOrElse("TRAVIS_TAG", "0.1-SNAPSHOT"),
   description := "Library for passing context between threads in multi-threaded applications",
-
   licenses ++= Seq("MIT" -> url(s"https://github.com/avast/continuity/blob/${version.value}/LICENSE")),
   publishArtifact in Test := false,
-  publishArtifact in(Compile, packageDoc) := false,
-  sources in(Compile, doc) := Seq.empty,
+  publishArtifact in (Compile, packageDoc) := false,
+  sources in (Compile, doc) := Seq.empty,
   bintrayOrganization := Some("avast"),
   bintrayPackage := "continuity",
   pomExtra := (
@@ -44,12 +39,12 @@ lazy val commonSettings = Seq(
           <url>https://www.avast.com</url>
         </developer>
       </developers>
-    ),
+  ),
   libraryDependencies ++= Seq(
     "junit" % "junit" % "4.12" % "test",
-    "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+    "org.scalatest" %% "scalatest" % "3.0.4" % "test",
     "com.novocode" % "junit-interface" % "0.10" % "test", // Required by sbt to execute JUnit tests
-    "ch.qos.logback" % "logback-classic" % "1.1.8" % "test"
+    "ch.qos.logback" % "logback-classic" % "1.2.3" % "test"
   ),
   testOptions += Tests.Argument(TestFrameworks.JUnit)
 )
@@ -59,44 +54,41 @@ lazy val root = (project in file("."))
     name := "continuity",
     publish := {},
     publishLocal := {}
-  ).aggregate(coreScala, core)
-
-lazy val coreScala = (project in file("core-scala")).
-  settings(
-    commonSettings,
-    scalaSettings,
-    name := "continuity-core-scala",
-    libraryDependencies ++= Seq(
-      "org.slf4j" % "slf4j-api" % Versions.slf4j
-    )
   )
+  .aggregate(coreScala, core, nettyScala, netty)
 
-lazy val core = (project in file("core")).
-  settings(
+lazy val coreScala = (project in file("core-scala")).settings(
+  commonSettings,
+  scalaSettings,
+  name := "continuity-core-scala",
+  libraryDependencies ++= Seq(
+    "org.slf4j" % "slf4j-api" % Versions.slf4j
+  )
+)
+
+lazy val core = (project in file("core"))
+  .settings(
     commonSettings,
     scalaSettings,
-    name := "continuity-core",
-    libraryDependencies ++= Seq(
-    )
-  ).dependsOn(coreScala)
+    name := "continuity-core"
+  )
+  .dependsOn(coreScala)
 
-
-lazy val nettyScala = (project in file("netty-scala")).
-  settings(
+lazy val nettyScala = (project in file("netty-scala"))
+  .settings(
     commonSettings,
     scalaSettings,
     name := "continuity-netty-scala",
     libraryDependencies ++= Seq(
-      "io.netty" % "netty-transport" % "4.1.8.Final"
+      "io.netty" % "netty-transport" % Versions.netty
     )
-  ).dependsOn(coreScala)
+  )
+  .dependsOn(coreScala)
 
-lazy val netty = (project in file("netty")).
-  settings(
+lazy val netty = (project in file("netty"))
+  .settings(
     commonSettings,
     scalaSettings,
-    name := "continuity-netty",
-    libraryDependencies ++= Seq(
-    )
-  ).dependsOn(nettyScala)
-
+    name := "continuity-netty"
+  )
+  .dependsOn(nettyScala)
