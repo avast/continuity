@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
 /* KEEP THIS IMPLEMENTATION IN SYNC WITH THE SCALA API VERSION */
 
@@ -99,6 +100,14 @@ public final class Continuity {
 
     public static ExecutorService wrapExecutorService(ExecutorService executor, ThreadNamer threadNamer) {
         return CONTINUITY.wrapExecutorService(executor, threadNamer);
+    }
+
+    public static ScheduledExecutorService wrapScheduledExecutorService(ScheduledExecutorService executor) {
+        return CONTINUITY.wrapScheduledExecutorService(executor, IdentityThreadNamer$.MODULE$);
+    }
+
+    public static ScheduledExecutorService wrapScheduledExecutorService(ScheduledExecutorService executor, ThreadNamer threadNamer) {
+        return CONTINUITY.wrapScheduledExecutorService(executor, threadNamer);
     }
 
     private static <T> Optional<T> optionToOptional(Option<T> option) {

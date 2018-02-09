@@ -1,6 +1,6 @@
 package com.avast.continuity
 
-import java.util.concurrent.{Executor, ExecutorService}
+import java.util.concurrent.{Executor, ExecutorService, ScheduledExecutorService}
 
 import org.slf4j.MDC
 
@@ -100,6 +100,12 @@ object Continuity {
   def wrapExecutorService(executor: ExecutorService)(implicit threadNamer: ThreadNamer = IdentityThreadNamer): ExecutorService =
     preventDoubleWrap(executor) {
       new ContinuityExecutorService(executor)(threadNamer)
+    }
+
+  def wrapScheduledExecutorService(executor: ScheduledExecutorService)(
+      implicit threadNamer: ThreadNamer = IdentityThreadNamer): ScheduledExecutorService =
+    preventDoubleWrap(executor) {
+      new ContinuityScheduledExecutorService(executor)(threadNamer)
     }
 
   private def preventDoubleWrap[A](executor: A)(wrap: => A): A = executor match {
