@@ -55,7 +55,7 @@ lazy val root = (project in file("."))
     publish := {},
     publishLocal := {}
   )
-  .aggregate(coreScala, core, nettyScala, netty)
+  .aggregate(coreScala, core, nettyScala, netty, monix)
 
 lazy val coreScala = (project in file("core-scala")).settings(
   commonSettings,
@@ -92,3 +92,15 @@ lazy val netty = (project in file("netty"))
     name := "continuity-netty"
   )
   .dependsOn(nettyScala)
+
+
+lazy val monix = (project in file("monix"))
+  .settings(
+    commonSettings,
+    scalaSettings,
+    name := "continuity-monix",
+    libraryDependencies ++= Seq(
+      "io.monix" %% "monix" % "2.3.3"
+    )
+  )
+  .dependsOn(coreScala)
