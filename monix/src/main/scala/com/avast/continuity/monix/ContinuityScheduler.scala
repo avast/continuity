@@ -3,7 +3,7 @@ package com.avast.continuity.monix
 import java.util.concurrent.TimeUnit
 
 import com.avast.continuity.{MdcRunnable, ThreadNamer}
-import monix.execution.{Cancelable, ExecutionModel, Scheduler}
+import monix.execution.{Cancelable, ExecutionModel, Scheduler, UncaughtExceptionReporter}
 
 class ContinuityScheduler(wrapped: Scheduler)(implicit threadNamer: ThreadNamer) extends Scheduler {
   override def execute(command: Runnable): Unit = {
@@ -26,7 +26,12 @@ class ContinuityScheduler(wrapped: Scheduler)(implicit threadNamer: ThreadNamer)
     wrapped.scheduleAtFixedRate(initialDelay, period, unit, new MdcRunnable(r))
   }
 
-  override def currentTimeMillis(): Long = wrapped.currentTimeMillis()
+  override def clockRealTime(unit: TimeUnit): Long = wrapped.clockRealTime(unit)
+
+  override def clockMonotonic(unit: TimeUnit): Long = wrapped.clockMonotonic(unit)
+
+  override def withUncaughtExceptionReporter(r: UncaughtExceptionReporter): Scheduler =
+    new ContinuityScheduler(wrapped.withUncaughtExceptionReporter(r))
 
   override def executionModel: ExecutionModel = wrapped.executionModel
 

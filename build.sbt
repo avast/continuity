@@ -1,12 +1,13 @@
 import sbt.Keys.libraryDependencies
 
 lazy val Versions = new {
-  val netty = "4.1.19.Final"
-  val slf4j = "1.7.25"
+  val netty = "4.1.43.Final"
+  val slf4j = "1.7.28"
 }
 
 lazy val scalaSettings = Seq(
-  scalaVersion := "2.12.4",
+  scalaVersion := "2.12.10",
+  crossScalaVersions := List(scalaVersion.value, "2.13.1"),
   scalacOptions += "-deprecation",
   scalacOptions += "-unchecked",
   scalacOptions += "-feature"
@@ -42,8 +43,8 @@ lazy val commonSettings = Seq(
   ),
   libraryDependencies ++= Seq(
     "junit" % "junit" % "4.12" % "test",
-    "org.scalatest" %% "scalatest" % "3.0.4" % "test",
-    "com.novocode" % "junit-interface" % "0.10" % "test", // Required by sbt to execute JUnit tests
+    "org.scalatest" %% "scalatest" % "3.0.8" % "test",
+    "com.novocode" % "junit-interface" % "0.11" % "test", // Required by sbt to execute JUnit tests
     "ch.qos.logback" % "logback-classic" % "1.2.3" % "test"
   ),
   testOptions += Tests.Argument(TestFrameworks.JUnit)
@@ -93,14 +94,13 @@ lazy val netty = (project in file("netty"))
   )
   .dependsOn(nettyScala)
 
-
 lazy val monix = (project in file("monix"))
   .settings(
     commonSettings,
     scalaSettings,
     name := "continuity-monix",
     libraryDependencies ++= Seq(
-      "io.monix" %% "monix" % "2.3.3"
+      "io.monix" %% "monix" % "3.1.0"
     )
   )
   .dependsOn(coreScala)
