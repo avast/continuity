@@ -1,7 +1,6 @@
+sudo: false
 language: scala
+jdk: openjdk8
 scala:
   - 2.12.10
-jdk:
-  - oraclejdk8
 script: ./.travis.sh
-skip_cleanup: true
