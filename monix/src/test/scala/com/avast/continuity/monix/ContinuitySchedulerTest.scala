@@ -27,7 +27,7 @@ class ContinuitySchedulerTest extends FunSuite with ScalaFutures {
           assert(Continuity.getFromContext("traceId") === Some("value"))
           logger.info(s"mapping future ${Continuity.getFromContext("traceId")}")
           i + 1
-        }.runAsync
+        }.runToFuture
       }
       .futureValue
 
